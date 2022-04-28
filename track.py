@@ -37,8 +37,19 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
+unique_persons_list = []
+font = cv2.FONT_HERSHEY_SIMPLEX
+# fontScale
+fontScale = 1
+
+# Blue color in BGR
+color = (0, 0, 255)
+
+# Line thickness of 2 px
+thickness = 2
 
 def detect(opt):
+    unique_count = 0
     out, source, yolo_model, deep_sort_model, show_vid, save_vid, save_txt, imgsz, evaluate, half, \
         project, exist_ok, update, save_crop = \
         opt.output, opt.source, opt.yolo_model, opt.deep_sort_model, opt.show_vid, opt.save_vid, \
@@ -166,16 +177,16 @@ def detect(opt):
             imc = im0.copy() if save_crop else im0  # for save_crop
 
             annotator = Annotator(im0, line_width=2, pil=not ascii)
-            
-            print(i)
+
+            #print(i)
             #print(det)
-            
+
             if det is not None and len(det):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(im.shape[2:], det[:, :4], im0.shape).round()
-                
-                print(det)
-                
+
+                #print(det)
+
                 # Print results
                 for c in det[:, -1].unique():
                     n = (det[:, -1] == c).sum()  # detections per class
@@ -190,6 +201,8 @@ def detect(opt):
                 outputs[i] = deepsort_list[i].update(xywhs.cpu(), confs.cpu(), clss.cpu(), im0)
                 t5 = time_sync()
                 dt[3] += t5 - t4
+
+                #print(outputs[i])
 
                 # draw boxes for visualization
                 if len(outputs[i]) > 0:
@@ -210,7 +223,11 @@ def detect(opt):
                             with open(txt_path + '.txt', 'a') as f:
                                 f.write(('%g ' * 10 + '\n') % (frame_idx + 1, id, bbox_left,  # MOT format
                                                                bbox_top, bbox_w, bbox_h, -1, -1, -1, i))
-
+                        p1, p2 = (int(bboxes[0]), int(bboxes[1])), (int(bboxes[2]), int(bboxes[3]))
+                        center = ((p1[0]+p2[0])//2,(p1[1]+p2[1])//2)
+                        if output[4] not in unique_persons_list and center[0]<800 and center[0]>300 and center[1]<450 and center[1]>200:
+                            unique_count+=1
+                            unique_persons_list.append(output[4])
                         if save_vid or save_crop or show_vid:  # Add bbox to image
                             c = int(cls)  # integer class
                             label = f'{id:0.0f} {names[c]} {conf:.2f}'
@@ -245,6 +262,10 @@ def detect(opt):
                         fps, w, h = 30, im0.shape[1], im0.shape[0]
                     save_path = str(Path(save_path).with_suffix('.mp4'))  # force *.mp4 suffix on results videos
                     vid_writer[i] = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
+                im0 = cv2.rectangle(im0, (300,200), (800,450), (255,0,0), 2)
+                # Using cv2.putText() method
+                im0 = cv2.putText(im0, 'Unique_count in roi is : '+str(unique_count), (400,50), font,
+                                   fontScale, color, thickness, cv2.LINE_AA)
                 vid_writer[i].write(im0)
 
     # Print results
