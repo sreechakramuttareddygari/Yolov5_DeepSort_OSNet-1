@@ -168,7 +168,7 @@ def detect(opt):
             annotator = Annotator(im0, line_width=2, pil=not ascii)
             
             print(i)
-            print(det)
+            #print(det)
             
             if det is not None and len(det):
                 # Rescale boxes from img_size to im0 size
