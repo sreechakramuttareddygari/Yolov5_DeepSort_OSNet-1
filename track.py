@@ -263,7 +263,8 @@ def detect(opt):
             else:
                 deepsort_list[i].increment_ages()
                 LOGGER.info('No detections')
-            print(len(outputs[i]),persons_previous_frame,unique_persons_current_frame)
+            #print(len(outputs[i]),persons_previous_frame,unique_persons_current_frame)
+            print(persons_previous_frame,unique_persons_current_frame)
             if persons_previous_frame is None:
                persons_previous_frame = persons_current_frame
             else:
