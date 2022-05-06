@@ -37,7 +37,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
-unique_persons_list = []
+#unique_persons_list = []
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 # fontScale
@@ -51,6 +51,7 @@ thickness = 2
 
 def detect(opt):
     unique_count = 0
+    unique_persons_list = []
     persons_previous_frame = None
     out, source, yolo_model, deep_sort_model, show_vid, save_vid, save_txt, imgsz, evaluate, half, \
         project, exist_ok, update, save_crop = \
@@ -208,7 +209,7 @@ def detect(opt):
                 current_unique_persons_roi = []
                 
                 # draw boxes for visualization
-                persons_current_frame = 0
+                unique_persons_current_frame = 0
                 if len(outputs[i]) > 0:
                     for j, (output) in enumerate(outputs[i]):
 
@@ -231,10 +232,11 @@ def detect(opt):
                         center = ((p1[0]+p2[0])//2,(p1[1]+p2[1])//2)
                         if output[4] not in unique_persons_list and center[0]<800 and center[0]>300 and center[1]<450 and center[1]>200:
                             #unique_count+=1
-                            #unique_persons_list.append(output[4])
-                            current_unique_persons_roi.append(output[4])
-                        if center[0]<800 and center[0]>300 and center[1]<450 and center[1]>200:
-                            persons_current_frame += 1
+                            unique_persons_list.append(output[4])
+                            unique_persons_current_frame+=1
+                            #current_unique_persons_roi.append(output[4])
+                        #if center[0]<800 and center[0]>300 and center[1]<450 and center[1]>200:
+                        #    persons_current_frame += 1
                         if save_vid or save_crop or show_vid:  # Add bbox to image
                             c = int(cls)  # integer class
                             label = f'{id:0.0f} {names[c]} {conf:.2f}'
@@ -244,6 +246,12 @@ def detect(opt):
                                 save_one_box(bboxes, imc, file=save_dir / 'crops' / txt_file_name / names[c] / f'{id}' / f'{p.stem}.jpg', BGR=True)
 
                 LOGGER.info(f'{s}Done. YOLO:({t3 - t2:.3f}s), DeepSort:({t5 - t4:.3f}s)')
+                if persons_previous_frame is None:
+                  persons_previous_frame = len(outputs[i])
+                else:
+                  if persons_previous_frame != outputs:
+                    unique_count+=unique_persons_current_frame
+                '''
                 if persons_previous_frame is not None:
                   unique_persons_list.append(current_unique_persons_roi)
                   if persons_previous_frame != persons_current_frame:
@@ -253,6 +261,7 @@ def detect(opt):
                   unique_count+=len(current_unique_persons_roi)
                   unique_persons_list.append(current_unique_persons_roi)
                   persons_previous_frame = persons_current_frame
+                '''
 
             else:
                 deepsort_list[i].increment_ages()
