@@ -38,7 +38,7 @@ if str(ROOT) not in sys.path:
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
 unique_persons_list = []
-persons_previous_frame = None
+
 font = cv2.FONT_HERSHEY_SIMPLEX
 # fontScale
 fontScale = 1
@@ -51,6 +51,7 @@ thickness = 2
 
 def detect(opt):
     unique_count = 0
+    persons_previous_frame = None
     out, source, yolo_model, deep_sort_model, show_vid, save_vid, save_txt, imgsz, evaluate, half, \
         project, exist_ok, update, save_crop = \
         opt.output, opt.source, opt.yolo_model, opt.deep_sort_model, opt.show_vid, opt.save_vid, \
