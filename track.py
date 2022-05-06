@@ -48,12 +48,10 @@ color = (0, 0, 255)
 
 # Line thickness of 2 px
 thickness = 2
-
+unique_count = 0
+unique_persons_list = []
+persons_previous_frame = None
 def detect(opt):
-    unique_count = 0
-    unique_persons_list = []
-    persons_previous_frame = None
-    persons_current_frame = None
     out, source, yolo_model, deep_sort_model, show_vid, save_vid, save_txt, imgsz, evaluate, half, \
         project, exist_ok, update, save_crop = \
         opt.output, opt.source, opt.yolo_model, opt.deep_sort_model, opt.show_vid, opt.save_vid, \
@@ -135,6 +133,8 @@ def detect(opt):
     # Run tracking
     model.warmup(imgsz=(1 if pt else nr_sources, 3, *imgsz))  # warmup
     dt, seen = [0.0, 0.0, 0.0, 0.0], 0
+    unique_persons_current_frame = 0
+    persons_current_frame=0
     for frame_idx, (path, im, im0s, vid_cap, s) in enumerate(dataset):
         t1 = time_sync()
         im = torch.from_numpy(im).to(device)
@@ -184,8 +184,6 @@ def detect(opt):
 
             #print(i)
             #print(det)
-            unique_persons_current_frame = 0
-            persons_current_frame=0
             if det is not None and len(det):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(im.shape[2:], det[:, :4], im0.shape).round()
