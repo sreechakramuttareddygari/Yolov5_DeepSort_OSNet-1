@@ -249,7 +249,7 @@ def detect(opt):
                 if persons_previous_frame is None:
                   persons_previous_frame = len(outputs[i])
                 else:
-                  if persons_previous_frame > len(outputs[i]):
+                  if persons_previous_frame < len(outputs[i]):
                     unique_count+=unique_persons_current_frame
                   persons_previous_frame = len(outputs[i])
                 '''
