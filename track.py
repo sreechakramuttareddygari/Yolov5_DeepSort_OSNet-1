@@ -48,9 +48,10 @@ color = (0, 0, 255)
 
 # Line thickness of 2 px
 thickness = 2
-unique_count = 0
-unique_persons_list = []
+
 def detect(opt):
+    unique_count = 0
+    unique_persons_list = []
     persons_previous_frame = None
     out, source, yolo_model, deep_sort_model, show_vid, save_vid, save_txt, imgsz, evaluate, half, \
         project, exist_ok, update, save_crop = \
