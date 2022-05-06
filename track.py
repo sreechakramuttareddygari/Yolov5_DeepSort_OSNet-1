@@ -265,11 +265,11 @@ def detect(opt):
                 LOGGER.info('No detections')
             print(len(outputs[i]),persons_previous_frame,unique_persons_current_frame)
             if persons_previous_frame is None:
-               persons_previous_frame = len(outputs[i])
+               persons_previous_frame = persons_current_frame
             else:
                if persons_previous_frame < persons_current_frame:
                   unique_count+=unique_persons_current_frame
-               persons_previous_frame = len(outputs[i])
+               persons_previous_frame = persons_current_frame
             # Stream results
             im0 = annotator.result()
             if show_vid:
