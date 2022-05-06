@@ -134,8 +134,7 @@ def detect(opt):
     # Run tracking
     model.warmup(imgsz=(1 if pt else nr_sources, 3, *imgsz))  # warmup
     dt, seen = [0.0, 0.0, 0.0, 0.0], 0
-    unique_persons_current_frame = 0
-    persons_current_frame=0
+    
     for frame_idx, (path, im, im0s, vid_cap, s) in enumerate(dataset):
         t1 = time_sync()
         im = torch.from_numpy(im).to(device)
@@ -155,7 +154,8 @@ def detect(opt):
         # Apply NMS
         pred = non_max_suppression(pred, opt.conf_thres, opt.iou_thres, opt.classes, opt.agnostic_nms, max_det=opt.max_det)
         dt[2] += time_sync() - t3
-
+        unique_persons_current_frame = 0
+        persons_current_frame=0
         # Process detections
         for i, det in enumerate(pred):  # detections per image
             seen += 1
