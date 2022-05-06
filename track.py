@@ -50,8 +50,8 @@ color = (0, 0, 255)
 thickness = 2
 unique_count = 0
 unique_persons_list = []
-persons_previous_frame = None
 def detect(opt):
+    persons_previous_frame = None
     out, source, yolo_model, deep_sort_model, show_vid, save_vid, save_txt, imgsz, evaluate, half, \
         project, exist_ok, update, save_crop = \
         opt.output, opt.source, opt.yolo_model, opt.deep_sort_model, opt.show_vid, opt.save_vid, \
