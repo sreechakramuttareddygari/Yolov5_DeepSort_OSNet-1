@@ -246,6 +246,7 @@ def detect(opt):
                                 save_one_box(bboxes, imc, file=save_dir / 'crops' / txt_file_name / names[c] / f'{id}' / f'{p.stem}.jpg', BGR=True)
 
                 LOGGER.info(f'{s}Done. YOLO:({t3 - t2:.3f}s), DeepSort:({t5 - t4:.3f}s)')
+                print(len(outputs[i]),persons_previous_frame)
                 if persons_previous_frame is None:
                   persons_previous_frame = len(outputs[i])
                 else:
