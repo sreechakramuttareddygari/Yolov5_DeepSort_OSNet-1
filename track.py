@@ -53,6 +53,7 @@ def detect(opt):
     unique_count = 0
     unique_persons_list = []
     persons_previous_frame = None
+    persons_current_frame = None
     out, source, yolo_model, deep_sort_model, show_vid, save_vid, save_txt, imgsz, evaluate, half, \
         project, exist_ok, update, save_crop = \
         opt.output, opt.source, opt.yolo_model, opt.deep_sort_model, opt.show_vid, opt.save_vid, \
@@ -183,7 +184,8 @@ def detect(opt):
 
             #print(i)
             #print(det)
-
+            unique_persons_current_frame = 0
+            persons_current_frame=0
             if det is not None and len(det):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(im.shape[2:], det[:, :4], im0.shape).round()
@@ -209,7 +211,7 @@ def detect(opt):
                 current_unique_persons_roi = []
                 
                 # draw boxes for visualization
-                unique_persons_current_frame = 0
+                
                 if len(outputs[i]) > 0:
                     for j, (output) in enumerate(outputs[i]):
 
@@ -235,8 +237,8 @@ def detect(opt):
                             unique_persons_list.append(output[4])
                             unique_persons_current_frame+=1
                             #current_unique_persons_roi.append(output[4])
-                        #if center[0]<800 and center[0]>300 and center[1]<450 and center[1]>200:
-                        #    persons_current_frame += 1
+                        if center[0]<800 and center[0]>300 and center[1]<450 and center[1]>200:
+                            persons_current_frame+=1
                         if save_vid or save_crop or show_vid:  # Add bbox to image
                             c = int(cls)  # integer class
                             label = f'{id:0.0f} {names[c]} {conf:.2f}'
@@ -246,13 +248,7 @@ def detect(opt):
                                 save_one_box(bboxes, imc, file=save_dir / 'crops' / txt_file_name / names[c] / f'{id}' / f'{p.stem}.jpg', BGR=True)
 
                 LOGGER.info(f'{s}Done. YOLO:({t3 - t2:.3f}s), DeepSort:({t5 - t4:.3f}s)')
-                print(len(outputs[i]),persons_previous_frame,unique_persons_current_frame)
-                if persons_previous_frame is None:
-                  persons_previous_frame = len(outputs[i])
-                else:
-                  if persons_previous_frame < len(outputs[i]):
-                    unique_count+=unique_persons_current_frame
-                  persons_previous_frame = len(outputs[i])
+                
                 '''
                 if persons_previous_frame is not None:
                   unique_persons_list.append(current_unique_persons_roi)
@@ -268,7 +264,13 @@ def detect(opt):
             else:
                 deepsort_list[i].increment_ages()
                 LOGGER.info('No detections')
-
+            print(len(outputs[i]),persons_previous_frame,unique_persons_current_frame)
+            if persons_previous_frame is None:
+               persons_previous_frame = len(outputs[i])
+            else:
+               if persons_previous_frame < len(outputs[i]):
+                  unique_count+=unique_persons_current_frame
+               persons_previous_frame = len(outputs[i])
             # Stream results
             im0 = annotator.result()
             if show_vid:
