@@ -250,6 +250,8 @@ def detect(opt):
                     unique_count+=len(current_unique_persons_roi)
                     persons_previous_frame = persons_current_frame
                 else:
+                  unique_count+=len(current_unique_persons_roi)
+                  unique_persons_list.append(current_unique_persons_roi)
                   persons_previous_frame = persons_current_frame
 
             else:
