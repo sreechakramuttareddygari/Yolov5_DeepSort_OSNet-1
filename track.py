@@ -293,7 +293,9 @@ def detect(opt):
                     vid_writer[i] = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
                 im0 = cv2.rectangle(im0, (300,200), (800,450), (255,0,0), 2)
                 # Using cv2.putText() method
-                im0 = cv2.putText(im0, 'Unique_count in roi is : '+str(unique_count), (400,50), font,
+                im0 = cv2.putText(im0, 'Unique_count in roi till now : '+str(unique_count), (400,50), font,
+                                   fontScale, color, thickness, cv2.LINE_AA)
+                im0 = cv2.putText(im0, 'Unique_count in roi now : '+str(unique_count), (400,80), font,
                                    fontScale, color, thickness, cv2.LINE_AA)
                 vid_writer[i].write(im0)
 
