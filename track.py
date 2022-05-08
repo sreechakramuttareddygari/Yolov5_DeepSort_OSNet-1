@@ -295,7 +295,7 @@ def detect(opt):
                 # Using cv2.putText() method
                 im0 = cv2.putText(im0, 'Unique_count in roi till now : '+str(unique_count), (400,50), font,
                                    fontScale, color, thickness, cv2.LINE_AA)
-                im0 = cv2.putText(im0, 'Unique_count in roi now : '+str(unique_count), (400,80), font,
+                im0 = cv2.putText(im0, 'persons in roi now : '+str(persons_current_frame), (400,80), font,
                                    fontScale, color, thickness, cv2.LINE_AA)
                 vid_writer[i].write(im0)
 
