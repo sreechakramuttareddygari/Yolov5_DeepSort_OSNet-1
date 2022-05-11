@@ -53,6 +53,7 @@ def detect(opt):
     unique_count = 0
     unique_persons_list = []
     persons_previous_frame = None
+    frame_count = 0
     out, source, yolo_model, deep_sort_model, show_vid, save_vid, save_txt, imgsz, evaluate, half, \
         project, exist_ok, update, save_crop = \
         opt.output, opt.source, opt.yolo_model, opt.deep_sort_model, opt.show_vid, opt.save_vid, \
@@ -136,6 +137,9 @@ def detect(opt):
     dt, seen = [0.0, 0.0, 0.0, 0.0], 0
     
     for frame_idx, (path, im, im0s, vid_cap, s) in enumerate(dataset):
+        frame_count+=1
+        if frame_count%2 ==0:
+          continue
         t1 = time_sync()
         im = torch.from_numpy(im).to(device)
         im = im.half() if half else im.float()  # uint8 to fp16/32
