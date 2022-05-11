@@ -138,7 +138,7 @@ def detect(opt):
     
     for frame_idx, (path, im, im0s, vid_cap, s) in enumerate(dataset):
         frame_count+=1
-        if frame_count%2 ==0:
+        if frame_count%3 !=0:
           continue
         t1 = time_sync()
         im = torch.from_numpy(im).to(device)
