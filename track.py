@@ -145,6 +145,11 @@ def detect(opt):
           continue
         
         t1 = time_sync()
+        #facedetection
+        cv2.imwrite('img.jpg',im)
+        face = DeepFace.detectFace(img_path = "img.jpg", target_size = (224, 224), detector_backend = backends[4])
+        print(face)
+        
         im = torch.from_numpy(im).to(device)
         im = im.half() if half else im.float()  # uint8 to fp16/32
         im /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -165,9 +170,6 @@ def detect(opt):
         unique_persons_current_frame = 0
         persons_current_frame=0
         # Process detections
-        cv2.imwrite('img.jpg',im)
-        face = DeepFace.detectFace(img_path = "img.jpg", target_size = (224, 224), detector_backend = backends[4])
-        print(face)
         for i, det in enumerate(pred):  # detections per image
             seen += 1
             if webcam:  # nr_sources >= 1
