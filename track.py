@@ -165,7 +165,7 @@ def detect(opt):
         unique_persons_current_frame = 0
         persons_current_frame=0
         # Process detections
-        cv2.imwrite(im,'img.jpg')
+        cv2.imwrite('img.jpg',im)
         face = DeepFace.detectFace(img_path = "img.jpg", target_size = (224, 224), detector_backend = backends[4])
         print(face)
         for i, det in enumerate(pred):  # detections per image
