@@ -54,6 +54,7 @@ thickness = 2
 def detect(opt):
     unique_count = 0
     unique_persons_list = []
+    backends = ['opencv', 'ssd', 'dlib', 'mtcnn', 'retinaface', 'mediapipe']
     persons_previous_frame = None
     frame_count = 0
     out, source, yolo_model, deep_sort_model, show_vid, save_vid, save_txt, imgsz, evaluate, half, \
@@ -142,6 +143,7 @@ def detect(opt):
         frame_count+=1
         if frame_count%5 !=0:
           continue
+        
         t1 = time_sync()
         im = torch.from_numpy(im).to(device)
         im = im.half() if half else im.float()  # uint8 to fp16/32
@@ -163,6 +165,9 @@ def detect(opt):
         unique_persons_current_frame = 0
         persons_current_frame=0
         # Process detections
+        cv2.imwrite(im,'img.jpg')
+        face = DeepFace.detectFace(img_path = "img.jpg", target_size = (224, 224), detector_backend = backends[4])
+        print(face)
         for i, det in enumerate(pred):  # detections per image
             seen += 1
             if webcam:  # nr_sources >= 1
