@@ -148,8 +148,9 @@ def detect(opt):
         t1 = time_sync()
         #facedetection
         cv2.imwrite('b.jpg',im)
+        a = cv2.imread('b.jpg')
         #face = DeepFace.detectFace(img_path = "/content/Yolov5_DeepSort_OSNet-1/img.jpg", target_size = (224, 224), detector_backend = backends[4])
-        face = RetinaFace.detect_faces("b.jpg")
+        face = RetinaFace.detect_faces('b.jpg')
         print(face)
         
         im = torch.from_numpy(im).to(device)
